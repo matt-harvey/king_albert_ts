@@ -1,3 +1,8 @@
 {
-  "extends": "@oclif/tslint"
+  "extends": [
+    "tslint:recommended"
+  ],
+  "rules": {
+    "no-shadowed-variable": false
+  }
 }
