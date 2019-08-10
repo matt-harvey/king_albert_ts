@@ -1,8 +1,16 @@
 {
+  "compileOnSave": true,
   "compilerOptions": {
+    "alwaysStrict": true,
     "declaration": true,
     "importHelpers": true,
     "module": "commonjs",
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "outDir": "lib",
     "rootDir": "src",
     "strict": true,

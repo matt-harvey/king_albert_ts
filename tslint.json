@@ -3,6 +3,10 @@
     "tslint:recommended"
   ],
   "rules": {
-    "no-shadowed-variable": false
+    "arrow-parens": false,
+    "ban-single-arg-parens": true,
+    "no-console": false,
+    "no-shadowed-variable": false,
+    "interface-over-type-literal": false
   }
 }

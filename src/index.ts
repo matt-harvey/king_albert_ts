@@ -1,5 +1,9 @@
 import { Command, flags } from "@oclif/command";
 
+import { Board } from "./board";
+import { Card } from "./card";
+import { Deck } from "./deck";
+
 class Albertus extends Command {
   public static description = "describe the command here";
 
@@ -16,6 +20,10 @@ class Albertus extends Command {
   public static args = [{ name: "file" }];
 
   public async run() {
+    const deck = Deck.create().shuffle();
+    const board = Board.from(deck);
+    console.log("DEBUG JSON.stringify(board):", JSON.stringify(board));
+
     const { args, flags } = this.parse(Albertus);
 
     const name = flags.name || "world";
