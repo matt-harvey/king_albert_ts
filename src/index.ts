@@ -22,7 +22,7 @@ class Albertus extends Command {
   public async run() {
     const deck = Deck.create().shuffle();
     const board = Board.from(deck);
-    console.log("DEBUG JSON.stringify(board):", JSON.stringify(board));
+    console.log(`${board}`);
 
     const { args, flags } = this.parse(Albertus);
 

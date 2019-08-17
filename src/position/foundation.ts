@@ -30,4 +30,21 @@ export class Foundation implements IPosition {
   public give(): never {
     throw new Error("should not be called");
   }
+
+  public toString(): string {
+    const topCard = this.topCard();
+    if (topCard === null) {
+      return Suit.show(this.suit);
+    }
+    return topCard.toString();
+  }
+
+  private topCard(): Card | null {
+    const { suit, topRank } = this;
+    if (topRank === null) {
+      return null;
+    }
+    return Card.from(topRank, suit);
+  }
+
 }

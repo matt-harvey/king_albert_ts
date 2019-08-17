@@ -11,7 +11,7 @@ export class Column implements IPosition {
   }
 
   private constructor(
-    private readonly cards: List<Card>,
+    public readonly cards: List<Card>,
   ) {
   }
 
@@ -32,5 +32,9 @@ export class Column implements IPosition {
     const { cards } = this;
     const card = cards.last(null) as Card;
     return [card, Column.from(cards.pop())];
+  }
+
+  public size(): number {
+    return this.cards.size;
   }
 }

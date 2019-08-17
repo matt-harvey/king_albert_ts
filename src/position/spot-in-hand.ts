@@ -27,4 +27,12 @@ export class SpotInHand implements IPosition {
     }
     return [card, new SpotInHand(null)];
   }
+
+  public toString(): string {
+    const { card } = this;
+    if (card === null) {
+      return "";
+    }
+    return card.toString();
+  }
 }
