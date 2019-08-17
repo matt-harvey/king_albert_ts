@@ -1,93 +1,99 @@
-import { List, Range } from "immutable";
+import { Collection, List, Map, Range, Repeat, Seq } from "immutable";
+import { EOL } from "os";
 
 import { Card } from "./card";
 import { Deck } from "./deck";
-import { IPosition } from "./position";
+import { Label } from "./label";
+import { Position } from "./position";
 import { Column } from "./position/column";
 import { Foundation } from "./position/foundation";
 import { SpotInHand } from "./position/spot-in-hand";
 import { Suit } from "./suit";
+import { stringify, transposeAndFill } from "./util";
+
+const columnWidth = 5;
+const numFoundations = Suit.all().size;
+const numColumns = 9;
+const handSize = 7;
+const displayWidth = numColumns * columnWidth + 1;
 
 export class Board {
 
   public static from(deck: Deck): Board {
-    const foundations = createFoundations();
-    const [hand, reducedDeck] = createHand(deck);
-    const [columns, _] = createColumns(reducedDeck);
+    const foundations = createFoundations(Label.min);
+    const [columns, reducedDeck] = createColumns(Label.min + foundations.size, deck);
+    const [hand, _] = createHand(Label.min + foundations.size + columns.size, reducedDeck);
     return new Board(foundations, columns, hand);
   }
+
+  private readonly allPositions: List<Position>;
 
   private constructor(
     private readonly foundations: List<Foundation>,
     private readonly columns: List<Column>,
     private readonly hand: List<SpotInHand>,
   ) {
+    this.allPositions = foundations.concat(columns).concat(hand);
   }
 
   public toString(): string {
-    // FIXME DRY up the "padString"/"join(gutter)" stuff, as well as position label sequences.
     const { foundations, columns, hand } = this;
-    const positionWidth = 3;
-    const gutter = "  ";
-    const printableFoundations = foundations.map(padPosition).join(gutter);
-    const printableHand = hand.map(padPosition).join(gutter);
-    const maxColumnSize = columns.reduce((size, column) => Math.max(size, column.size()), 0);
-    const printableColumns = columns.map(column => {
-      const shortfall = column.size() - maxColumnSize;
-      const extras = Range(0, shortfall).map(_ => padString(""));
-      return column.cards.map(card => padString(card.toString())).concat(extras);
-    });
-    const printableRows = Range(0, maxColumnSize).reduce((rows, n) => {
-      const row = printableColumns.map(printableColumn => printableColumn.get(n));
-      return rows.push(row as List<string>);
-    }, List<List<string>>());
-    const printableRowStrings = printableRows.map(row => row.join(gutter));
-    // FIXME What about cross-platform newlines?
 
-    return `
-                         ${["a", "b", "c", "d"].map(padString).join(gutter)}
-____________________________________________
-                          ${printableFoundations}
+    // Format Positions for printing
+    const printableFoundations = foundations.map(stringify);
+    const printableHand = hand.map(stringify);
+    const printableColumns = columns.map(column => column.cards.map(stringify));
+    const rows = transposeAndFill(printableColumns, " ");
+    const printableRows = rows.map(formatCells);
 
-${["e", "f", "g", "h", "i", "j", "k", "l", "m"].map(padString).join(gutter)}
-____________________________________________
+    // Format labels for the positions
+    const foundationsLabels = printableLabels(foundations);
+    const columnsLabels = printableLabels(columns);
+    const handLabels = printableLabels(hand);
 
-${printableRowStrings.join("\n")}
+    // Format divider
+    const divider = EOL + "-".repeat(displayWidth) + EOL;
 
-${["n", "o", "p", "q", "r", "s", "t"].map(padString).join(gutter)}
-____________________________________________
-${printableHand}
-`;
+    // Put it all together
+    const labelledFoundations = [foundationsLabels, printableFoundations].map(formatCells).join(divider);
+    const labelledColumns = [formatCells(columnsLabels), printableRows.join(EOL)].join(divider);
+    const labelledHand = [handLabels, printableHand].map(formatCells).join(divider);
+    return [labelledFoundations, labelledColumns, labelledHand].join(EOL + EOL);
+  }
+
+  private positionAt(label: Label): Position | null {
+    return this.allPositions.get(label, null);
   }
 }
 
-function createFoundations(): List<Foundation> {
-  return Suit.all().map(Foundation.from);
+function printableLabels(positions: Collection<number, Position>): Collection<number, string> {
+  return positions.map(position => Label.show(position.label));
 }
 
-function createHand(deck: Deck): [List<SpotInHand>, Deck] {
-  const [cards, newDeck] = deck.dealN(7);
-  const hand = cards.map(card => SpotInHand.from(card as Card));
+function createFoundations(startLabel: Label): List<Foundation> {
+  return Suit.all().map((suit, i) => Foundation.from(startLabel + i, suit));
+}
+
+function createHand(startLabel: Label, deck: Deck): [List<SpotInHand>, Deck] {
+  const [cards, newDeck] = deck.deal(handSize);
+  const hand = cards.map((card, i) => SpotInHand.from(startLabel + i, card as Card));
   return [hand, newDeck];
 }
 
-function createColumns(deck: Deck): [List<Column>, Deck] {
-  return Range(1, 10).reduce(([accumulatedColumns, reducedDeck], num) => {
-    const [column, newDeck] = createColumn(reducedDeck, num);
+function createColumns(startLabel: Label, deck: Deck): [List<Column>, Deck] {
+  return Range(0, numColumns).reduce(([accumulatedColumns, reducedDeck], num) => {
+    const [column, newDeck] = createColumn(startLabel + num, reducedDeck, num + 1);
     return [accumulatedColumns.push(column), newDeck];
   }, [List<Column>(), deck]);
 }
 
-function createColumn(deck: Deck, numCards: number): [Column, Deck] {
-    const [cards, newDeck] = deck.dealN(numCards);
-    const column = Column.from(cards);
-    return [column, newDeck];
+function createColumn(label: Label, deck: Deck, numCards: number): [Column, Deck] {
+  const [cards, newDeck] = deck.deal(numCards);
+  const column = Column.from(label, cards);
+  return [column, newDeck];
 }
 
-function padPosition(position: IPosition): string {
-  return padString(position.toString());
-}
-
-function padString(str: string): string {
-  return str.padStart(3, " ");
+function formatCells(cells: Collection<number, string>): string {
+  const padder = " ";
+  return cells.map(cell => cell.padStart(columnWidth, padder)).join("").padStart(displayWidth - 1, padder) + padder;
 }

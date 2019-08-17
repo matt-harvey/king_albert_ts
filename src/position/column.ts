@@ -1,18 +1,21 @@
 import { List } from "immutable";
 
 import { Card } from "../card";
-import { IPosition } from "../position";
+import { Label } from "../label";
+import { Position } from "../position";
 import { Suit } from "../suit";
 
-export class Column implements IPosition {
+export class Column extends Position {
 
-  public static from(cards: List<Card>): Column {
-    return new Column(cards);
+  public static from(label: Label, cards: List<Card>): Column {
+    return new Column(label, cards);
   }
 
   private constructor(
+    label: Label,
     public readonly cards: List<Card>,
   ) {
+    super(label);
   }
 
   public canGive(): boolean {
@@ -31,7 +34,11 @@ export class Column implements IPosition {
   public give(): [Card, Column] {
     const { cards } = this;
     const card = cards.last(null) as Card;
-    return [card, Column.from(cards.pop())];
+    return [card, Column.from(this.label, cards.pop())];
+  }
+
+  public receive(card: Card): Column {
+    return Column.from(this.label, this.cards.push(card));
   }
 
   public size(): number {

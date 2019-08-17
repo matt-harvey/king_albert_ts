@@ -22,15 +22,7 @@ class Albertus extends Command {
   public async run() {
     const deck = Deck.create().shuffle();
     const board = Board.from(deck);
-    console.log(`${board}`);
-
-    const { args, flags } = this.parse(Albertus);
-
-    const name = flags.name || "world";
-    this.log(`hello ${name} from ./src/index.ts`);
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`);
-    }
+    console.log(board.toString());
   }
 }
 

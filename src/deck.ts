@@ -21,22 +21,11 @@ export class Deck {
     return new Deck(cards);
   }
 
-  public dealN(numCards: number): [List<Card>, Deck] {
-    // FIXME This could surely be more efficient.
-    return Range(0, numCards).reduce(([cards, deck]: [List<Card>, Deck]) => {
-      const [card, reducedDeck] = deck.deal();
-      if (card === null) {
-        return [cards, deck];
-      }
-      return [cards.push(card), reducedDeck];
-    }, [List<Card>(), this]);
-  }
-
-  private deal(): [Card | null, Deck] {
+  public deal(numCards: number): [List<Card>, Deck] {
     const { cards } = this;
-    const reducedCards = cards.pop();
-    const deck = new Deck(reducedCards);
-    return [cards.last(null), deck];
+    const newCards = cards.takeLast(numCards);
+    const newDeck = new Deck(cards.skipLast(numCards));
+    return [newCards, newDeck];
   }
 }
 

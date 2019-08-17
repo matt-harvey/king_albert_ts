@@ -1,15 +1,18 @@
 import { Card } from "../card";
-import { IPosition } from "../position";
+import { Label } from "../label";
+import { Position } from "../position";
 
-export class SpotInHand implements IPosition {
+export class SpotInHand extends Position {
 
-  public static from(card: Card): SpotInHand {
-    return new SpotInHand(card);
+  public static from(label: Label, card: Card): SpotInHand {
+    return new SpotInHand(label, card);
   }
 
   private constructor(
+    label: Label,
     private readonly card: Card | null,
   ) {
+    super(label);
   }
 
   public canGive(): boolean {
@@ -25,7 +28,11 @@ export class SpotInHand implements IPosition {
     if (card === null) {
       throw new Error("Cannot call give on empty SpotInHand");
     }
-    return [card, new SpotInHand(null)];
+    return [card, new SpotInHand(this.label, null)];
+  }
+
+  public receive(card: Card): never {
+    throw new Error("should not be called");
   }
 
   public toString(): string {

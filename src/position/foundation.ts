@@ -1,18 +1,21 @@
 import { Card } from "../card";
-import { IPosition } from "../position";
+import { Label } from "../label";
+import { Position } from "../position";
 import { Rank } from "../rank";
 import { Suit } from "../suit";
 
-export class Foundation implements IPosition {
+export class Foundation extends Position {
 
-  public static from(suit: Suit): Foundation {
-    return new Foundation(suit, null);
+  public static from(label: Label, suit: Suit): Foundation {
+    return new Foundation(label, suit, null);
   }
 
   private constructor(
+    label: Label,
     private readonly suit: Suit,
     private readonly topRank: Rank | null,
   ) {
+    super(label);
   }
 
   public canGive(): boolean {
@@ -29,6 +32,10 @@ export class Foundation implements IPosition {
 
   public give(): never {
     throw new Error("should not be called");
+  }
+
+  public receive(card: Card): Foundation {
+    return new Foundation(this.label, card.suit, card.rank);
   }
 
   public toString(): string {
