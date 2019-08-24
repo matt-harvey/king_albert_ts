@@ -5,6 +5,7 @@ import { Label } from "../label";
 import { Position } from "../position";
 import { Suit } from "../suit";
 
+// Represents a column of cards in the center of the playing area.
 export class Column extends Position {
 
   public static from(label: Label, cards: List<Card>): Column {

@@ -4,6 +4,7 @@ import { EOL } from "os";
 import { Card } from "./card";
 import { Deck } from "./deck";
 import { Label } from "./label";
+import { Move } from "./move";
 import { Position } from "./position";
 import { Column } from "./position/column";
 import { Foundation } from "./position/foundation";
@@ -16,13 +17,16 @@ const numFoundations = Suit.all().size;
 const numColumns = 9;
 const handSize = 7;
 const displayWidth = numColumns * columnWidth + 1;
+const startFoundationsLabel = Label.min;
+const startColumnsLabel = startFoundationsLabel + numFoundations;
+const startHandLabel = startColumnsLabel + numColumns;
 
 export class Board {
 
   public static from(deck: Deck): Board {
-    const foundations = createFoundations(Label.min);
-    const [columns, reducedDeck] = createColumns(Label.min + foundations.size, deck);
-    const [hand, _] = createHand(Label.min + foundations.size + columns.size, reducedDeck);
+    const foundations = createFoundations(startFoundationsLabel);
+    const [columns, reducedDeck] = createColumns(startColumnsLabel, deck);
+    const [hand, _] = createHand(startHandLabel, reducedDeck);
     return new Board(foundations, columns, hand);
   }
 
@@ -34,6 +38,28 @@ export class Board {
     private readonly hand: List<SpotInHand>,
   ) {
     this.allPositions = foundations.concat(columns).concat(hand);
+  }
+
+  public apply(move: Move): Board | null {
+    const { source, destination } = move;
+    const sourcePosition = this.positionAt(source);
+    const destinationPosition = this.positionAt(destination);
+    if (sourcePosition === null || destinationPosition === null) {
+      return null;
+    }
+    if (!sourcePosition.canGive()) {
+      return null;
+    }
+    const [card, revisedSourcePosition] = sourcePosition.give();
+    if (!destinationPosition.canReceive(card)) {
+      return null;
+    }
+    const revisedDestinationPosition = destinationPosition.receive(card);
+    const positions = this.allPositions.set(source, revisedSourcePosition).set(destination, revisedDestinationPosition);
+    const foundations = positions.slice(startFoundationsLabel, startColumnsLabel) as List<Foundation>;
+    const columns = positions.slice(startColumnsLabel, startHandLabel) as List<Column>;
+    const hand = positions.slice(startHandLabel) as List<SpotInHand>;
+    return new Board(foundations, columns, hand);
   }
 
   public toString(): string {

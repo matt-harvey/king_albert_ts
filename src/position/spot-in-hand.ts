@@ -2,6 +2,7 @@ import { Card } from "../card";
 import { Label } from "../label";
 import { Position } from "../position";
 
+// Represents a position occupyable by a single card, in the user's hand or "reserve".
 export class SpotInHand extends Position {
 
   public static from(label: Label, card: Card): SpotInHand {

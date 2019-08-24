@@ -4,6 +4,7 @@ import { Position } from "../position";
 import { Rank } from "../rank";
 import { Suit } from "../suit";
 
+// Represents a position in the playing area on which the user builds cards in a single suit, in ascending order.
 export class Foundation extends Position {
 
   public static from(label: Label, suit: Suit): Foundation {

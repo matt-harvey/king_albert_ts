@@ -1,6 +1,7 @@
 import { Card } from "./card";
 import { Label } from "./label";
 
+// Represents a position occupyable by a card in the playing area.
 export abstract class Position {
   public constructor(
     public readonly label: Label,
