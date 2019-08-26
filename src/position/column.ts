@@ -33,7 +33,10 @@ export class Column extends Position {
 
   public give(): [Card, Column] {
     const { cards } = this;
-    const card = cards.last(null) as Card;
+    const card = cards.last(null);
+    if (card === null) {
+      throw new Error("Cannot give card from empty column");
+    }
     return [card, Column.from(this.label, cards.pop())];
   }
 

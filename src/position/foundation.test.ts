@@ -45,3 +45,31 @@ describe("Foundation#give", () => {
     expect(() => foundation.give()).toThrow("should not be called");
   });
 });
+
+describe("Foundation#receive", () => {
+  it("returns a new Foundation with the passed card as its top card", () => {
+    const foundation = Foundation.from(label, "spades");
+    const card = Card.from(12, "hearts");
+    const otherCard = Card.from(9, "diamonds");
+    const revisedFoundation = foundation.receive(card);
+    expect(revisedFoundation.toString()).toEqual("Q♡");
+    expect(revisedFoundation.receive(otherCard).toString()).toEqual("9♢");
+  });
+});
+
+describe("Foundation#toString", () => {
+  describe("when the foundation is empty", () => {
+    it("returns a human friendly string representation of the foundation, showing its suit only", () => {
+      const foundation = Foundation.from(label, "diamonds");
+      expect(foundation.toString()).toEqual("♢");
+    });
+  });
+  describe("when the foundation is not empty", () => {
+    it("returns a human friendly string representation of the foundation, showing its top card only", () => {
+      const card = Card.from(1, "diamonds");
+      const otherCard = Card.from(2, "diamonds");
+      const foundation = Foundation.from(label, "diamonds").receive(card).receive(otherCard);
+      expect(foundation.toString()).toEqual("2♢");
+    });
+  });
+});
