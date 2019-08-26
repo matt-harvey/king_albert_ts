@@ -16,7 +16,7 @@ export class SpotInHand extends Position {
   }
 
   public canGive(): boolean {
-    return true;
+    return this.card !== null;
   }
 
   public canReceive(card: Card): boolean {

@@ -65,12 +65,10 @@ describe("Column#give", () => {
     const [card, newColumn] = column.give();
 
     it("returns the top card of the column", () => {
-      const { rank, suit } = card;
-      expect(rank).toEqual(7);
-      expect(suit).toEqual("hearts");
+      expect(card).toEqual(Card.from(7, "hearts"));
     });
     it("returns a new column that excludes the given card", () => {
-      expect(newColumn.cards.map(card => [card.rank, card.suit])).toEqual(List([[3, "spades"], [11, "diamonds"]]));
+      expect(newColumn.cards).toEqual(List([Card.from(3, "spades"), Card.from(11, "diamonds")]));
     });
   });
 });
@@ -80,8 +78,7 @@ describe("Column#receive", () => {
     const cards = List([Card.from(3, "spades"), Card.from(11, "diamonds")]);
     const column = Column.from(label, cards);
     const newColumn = column.receive(Card.from(5, "clubs"));
-    expect(newColumn.cards.map(card => [card.rank, card.suit])).
-      toEqual(List([[3, "spades"], [11, "diamonds"], [5, "clubs"]]));
+    expect(newColumn.cards).toEqual(List([Card.from(3, "spades"), Card.from(11, "diamonds"), Card.from(5, "clubs")]));
   });
 });
 
