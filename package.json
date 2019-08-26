@@ -8,15 +8,11 @@
   },
   "bugs": "https://github.com/matt-harvey/albertus/issues",
   "dependencies": {
-    "@oclif/command": "^1.5.18",
-    "@oclif/config": "^1.13.2",
-    "@oclif/plugin-help": "^2.2.0",
     "immutable": "^4.0.0-rc.12",
     "runtypes": "^4.0.0",
     "tslib": "^1.10.0"
   },
   "devDependencies": {
-    "@oclif/tslint": "^3.1.1",
     "@types/jest": "^24.0.18",
     "@types/node": "^10.14.13",
     "jest": "^24.8.0",
@@ -34,18 +30,12 @@
     "/lib"
   ],
   "homepage": "https://github.com/matt-harvey/albertus",
-  "keywords": [
-    "oclif"
-  ],
   "license": "MIT",
   "main": "lib/index.js",
-  "oclif": {
-    "bin": "albertus"
-  },
   "repository": "matt-harvey/albertus",
   "scripts": {
+    "build": "rm -rf lib && tsc --build",
     "posttest": "tslint --project . --format stylish",
-    "prepack": "rm -rf lib && tsc -b",
     "start": "$npm_package_bin_albertus",
     "test": "jest --coverage"
   },
