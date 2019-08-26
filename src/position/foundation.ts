@@ -23,11 +23,12 @@ export class Foundation extends Position {
   }
 
   public canReceive(card: Card): boolean {
-    const { topRank, suit } = this;
-    return (
-      card.suit === suit &&
-      (topRank === null || card.rank === topRank + 1)
-    );
+    if (card.suit !== this.suit) {
+      return false;
+    }
+    const { topRank } = this;
+    const requiredRank = (topRank === null ? 1 : topRank + 1);
+    return card.rank === requiredRank;
   }
 
   public give(): never {
