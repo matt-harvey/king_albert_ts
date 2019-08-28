@@ -23,13 +23,15 @@ async function main() {
   const { stdin: input, stdout: output } = process;
   const cli = readline.createInterface({ completer, input, output });
 
-  const showBoard = () => console.log(`${clearScreen}${board}`);
-  const showBoardWithPrompt = () => { showBoard(); cli.prompt(); };
-  const showHelp = () => {
+  const showBoardWithPrompt = () => {
+    console.log(`${clearScreen}${board}`);
+    cli.prompt();
+  };
+  const showHelpWithPrompt = () => {
     console.log(`Enter two letters to describe your desired move, indicating the "from" position, ` +
                 `followed by the "to" position. To quit, enter "quit".`);
+    cli.prompt();
   };
-  const showHelpWithPrompt = () => { showHelp(); cli.prompt(); };
 
   showBoardWithPrompt();
 
@@ -65,6 +67,12 @@ async function main() {
     }
     board = newBoard;
     showBoardWithPrompt();
+    if (board.victoryState() === "won") {
+      console.log("Congratulations, you won!");
+      cli.close();
+      process.exit();
+      return;
+    }
     return;
   });
 

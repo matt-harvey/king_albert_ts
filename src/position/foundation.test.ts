@@ -1,5 +1,8 @@
+import { Range } from "immutable";
+
 import { Card } from "../card";
 import { Foundation } from "./foundation";
+import { Rank } from "../rank";
 
 const label = 2;
 
@@ -54,6 +57,18 @@ describe("Foundation#receive", () => {
     const revisedFoundation = foundation.receive(card);
     expect(revisedFoundation.toString()).toEqual("Q♡");
     expect(revisedFoundation.receive(otherCard).toString()).toEqual("9♢");
+  });
+});
+
+describe("Foundation#isComplete", () => {
+  it("returns truthy if and only if the top card is a King", () => {
+    const emptyFoundation = Foundation.from(label, "spades");
+    expect(emptyFoundation.isComplete()).toBeFalsy();
+    const queenFoundation = Range(1, 13).reduce((foundation, rank) =>
+      foundation.receive(Card.from(rank as Rank, "spades")), emptyFoundation);
+    expect(queenFoundation.isComplete()).toBeFalsy();
+    const kingFoundation = queenFoundation.receive(Card.from(13, "spades"));
+    expect(kingFoundation.isComplete()).toBeTruthy();
   });
 });
 

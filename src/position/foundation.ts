@@ -40,6 +40,10 @@ export class Foundation extends Position {
     return new Foundation(this.label, card.suit, card.rank);
   }
 
+  public isComplete(): boolean {
+    return this.topRank === Rank.max;
+  }
+
   public toString(): string {
     const topCard = this.topCard();
     if (topCard === null) {

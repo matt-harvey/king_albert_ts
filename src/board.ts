@@ -11,6 +11,7 @@ import { Foundation } from "./position/foundation";
 import { SpotInHand } from "./position/spot-in-hand";
 import { Suit } from "./suit";
 import { stringify, transposeAndFill } from "./util";
+import { VictoryState } from "./victory-state";
 
 const columnWidth = 5;
 const numFoundations = Suit.all().size;
@@ -85,6 +86,13 @@ export class Board {
     const labelledColumns = [formatCells(columnsLabels), printableRows.join(EOL)].join(divider);
     const labelledHand = [handLabels, printableHand].map(formatCells).join(divider);
     return [labelledFoundations, labelledColumns, labelledHand].join(EOL + EOL);
+  }
+
+  public victoryState(): VictoryState {
+    if (this.foundations.every(foundation => foundation.isComplete())) {
+      return "won";
+    }
+    return "ongoing";
   }
 
   private positionAt(label: Label): Position | null {

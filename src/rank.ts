@@ -4,8 +4,11 @@ const ranks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] as const;
 
 export type Rank = typeof ranks[number];
 
+const max = ranks[ranks.length - 1];
+
 export const Rank = {
   all,
+  max,
   show,
 };
 
