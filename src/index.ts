@@ -10,15 +10,25 @@ async function main() {
   const deck = Deck.create().shuffle();
   let board = Board.from(deck);
 
-  console.log(clearScreen);
-  console.log(board.toString());
+  const quitCommands = ["quit", "exit"];
+  const completableCommands = [...quitCommands];
+  const completer = (line: string) => {
+    const hits = completableCommands.filter(command => command.startsWith(line));
+    // Show all completions if none found
+    const completions = (hits.length === 0 ? completableCommands : hits);
+    return [completions, line];
+  };
 
   const { stdin: input, stdout: output } = process;
-  const cli = readline.createInterface({ input, output });
-  cli.setPrompt("> ");
-  cli.prompt();
+  const cli = readline.createInterface({ completer, input, output });
+
+  const showBoard = () => console.log(`${clearScreen}${board}`);
+  const showBoardWithPrompt = () => { showBoard(); cli.prompt(); };
+
+  showBoardWithPrompt();
+
   cli.on("line", input => {
-    if (input === "quit" || input === "exit") {
+    if (quitCommands.includes(input)) {
       cli.question("Are you sure you want to quit (y/N)? ", answer => {
         if (answer.match(/y(es)?/i)) {
           cli.close();
@@ -44,9 +54,7 @@ async function main() {
       return;
     }
     board = newBoard;
-    console.log(clearScreen);
-    console.log(board.toString());
-    cli.prompt();
+    showBoardWithPrompt();
     return;
   });
 
