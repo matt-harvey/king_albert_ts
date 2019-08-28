@@ -18,6 +18,19 @@ async function main() {
   cli.setPrompt("> ");
   cli.prompt();
   cli.on("line", input => {
+    if (input === "quit" || input === "exit") {
+      cli.question("Are you sure you want to quit (y/N)? ", answer => {
+        if (answer.match(/y(es)?/i)) {
+          cli.close();
+          process.exit();
+          return;
+        }
+        cli.prompt();
+        return;
+      });
+      cli.prompt();
+      return;
+    }
     const move = Move.from(input);
     if (move === null) {
       console.log(`Invalid move. Enter two letters, indicating the "from" position, followed by the "to" position".`);
