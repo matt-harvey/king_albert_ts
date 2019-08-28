@@ -10,8 +10,9 @@ async function main() {
   const deck = Deck.create().shuffle();
   let board = Board.from(deck);
 
+  const helpCommands = ["help", "?"];
   const quitCommands = ["quit", "exit"];
-  const completableCommands = [...quitCommands];
+  const completableCommands = [...helpCommands, ...quitCommands];
   const completer = (line: string) => {
     const hits = completableCommands.filter(command => command.startsWith(line));
     // Show all completions if none found
@@ -24,6 +25,11 @@ async function main() {
 
   const showBoard = () => console.log(`${clearScreen}${board}`);
   const showBoardWithPrompt = () => { showBoard(); cli.prompt(); };
+  const showHelp = () => {
+    console.log(`Enter two letters to describe your desired move, indicating the "from" position, ` +
+                `followed by the "to" position. To quit, enter "quit".`);
+  };
+  const showHelpWithPrompt = () => { showHelp(); cli.prompt(); };
 
   showBoardWithPrompt();
 
@@ -41,10 +47,14 @@ async function main() {
       cli.prompt();
       return;
     }
+    if (helpCommands.includes(input)) {
+      showHelpWithPrompt();
+      return;
+    }
     const move = Move.from(input);
     if (move === null) {
-      console.log(`Invalid move. Enter two letters, indicating the "from" position, followed by the "to" position".`);
-      cli.prompt();
+      console.log("Invalid move.");
+      showHelpWithPrompt();
       return;
     }
     const newBoard = board.apply(move);
