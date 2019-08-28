@@ -14,9 +14,7 @@ async function main() {
   const quitCommands = ["quit", "exit"];
   const completableCommands = [...helpCommands, ...quitCommands];
   const completer = (line: string) => {
-    const hits = completableCommands.filter(command => command.startsWith(line));
-    // Show all completions if none found
-    const completions = (hits.length === 0 ? completableCommands : hits);
+    const completions = completableCommands.filter(command => command.startsWith(line));
     return [completions, line];
   };
 
