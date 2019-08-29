@@ -11,7 +11,7 @@
     "noImplicitThis": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "outDir": "lib",
+    "outDir": "dist",
     "rootDir": "src",
     "strict": true,
     "target": "es2017",

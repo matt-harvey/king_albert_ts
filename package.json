@@ -28,17 +28,17 @@
   },
   "files": [
     "/bin",
-    "/lib"
+    "/dist"
   ],
   "homepage": "https://github.com/matt-harvey/albertus",
   "license": "MIT",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "repository": "matt-harvey/albertus",
   "scripts": {
-    "build": "rm -rf lib && tsc --build",
+    "build": "rm -rf dist && tsc --build",
     "posttest": "tslint --project . --format stylish",
     "start": "$npm_package_bin_albertus",
     "test": "jest --coverage"
   },
-  "types": "lib/index.d.ts"
+  "types": "dist/index.d.ts"
 }

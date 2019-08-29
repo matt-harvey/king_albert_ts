@@ -9,4 +9,4 @@ if (dev) {
   require('ts-node').register({ project })
 }
 
-require(`../${dev ? 'src' : 'lib'}`);
+require(`../${dev ? 'src' : 'dist'}`);
