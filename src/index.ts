@@ -33,12 +33,15 @@ async function main() {
 
   showBoardWithPrompt();
 
+  cli.on("close", () => {
+    process.exit();
+  });
+
   cli.on("line", input => {
     if (quitCommands.includes(input)) {
       cli.question("Are you sure you want to quit (y/N)? ", answer => {
         if (answer.match(/y(es)?/i)) {
           cli.close();
-          process.exit();
           return;
         }
         cli.prompt();
@@ -69,12 +72,10 @@ async function main() {
     case "won":
       console.log("Congratulations, you won!");
       cli.close();
-      process.exit();
       return;
     case "lost":
       console.log("You have no legal moves left. You lost! Too bad!");
       cli.close();
-      process.exit();
       return;
     }
     return;
