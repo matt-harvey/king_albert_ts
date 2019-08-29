@@ -65,15 +65,20 @@ async function main() {
     }
     board = newBoard;
     showBoardWithPrompt();
-    if (board.victoryState() === "won") {
+    switch (board.victoryState()) {
+    case "won":
       console.log("Congratulations, you won!");
+      cli.close();
+      process.exit();
+      return;
+    case "lost":
+      console.log("You have no legal moves left. You lost! Too bad!");
       cli.close();
       process.exit();
       return;
     }
     return;
   });
-
 }
 
 main();

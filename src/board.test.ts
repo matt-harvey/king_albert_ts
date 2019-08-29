@@ -1,7 +1,9 @@
+import { List } from "immutable";
 import { EOL } from "os";
 
 import { Board } from "./board";
 import { Deck } from "./deck";
+import { Move } from "./move";
 
 // For testability, we don't shuffle the deck.
 const deck = Deck.create();
@@ -49,6 +51,20 @@ describe("Board#apply", () => {
         "             A♠   2♠   3♠        5♠   6♠   7♠ ",
       ].join(EOL));
     });
+  });
+});
+
+describe("Board#permittedMoves", () => {
+  it("returns all the moves that are permissible for this board", () => {
+    expect(board.permittedMoves()).toEqual(List([
+      Move.from("gj"),
+      Move.from("gl"),
+      Move.from("jf"),
+      Move.from("lf"),
+      Move.from("na"),
+      Move.from("om"),
+      Move.from("qk"),
+    ]));
   });
 });
 

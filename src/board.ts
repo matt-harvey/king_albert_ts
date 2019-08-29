@@ -63,6 +63,18 @@ export class Board {
     return new Board(foundations, columns, hand);
   }
 
+  public permittedMoves(): List<Move> {
+    const { allPositions } = this;
+    return allPositions.reduce((moves, sourcePosition) => {
+      return allPositions.reduce((movesFromThisSource, destinationPosition) => {
+        if (!sourcePosition.canGive() || !destinationPosition.canReceive(sourcePosition.give()[0])) {
+          return movesFromThisSource;
+        }
+        return movesFromThisSource.push({ source: sourcePosition.label, destination: destinationPosition.label });
+      }, moves);
+    }, List<Move>());
+  }
+
   public toString(): string {
     const { foundations, columns, hand } = this;
 
@@ -91,6 +103,9 @@ export class Board {
   public victoryState(): VictoryState {
     if (this.foundations.every(foundation => foundation.isComplete())) {
       return "won";
+    }
+    if (this.permittedMoves().size === 0) {
+      return "lost";
     }
     return "ongoing";
   }

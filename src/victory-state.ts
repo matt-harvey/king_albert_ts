@@ -1,1 +1,1 @@
-export type VictoryState = "won" | "ongoing";
+export type VictoryState = "won" | "ongoing" | "lost";
