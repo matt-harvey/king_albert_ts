@@ -1,4 +1,4 @@
-import * as readline from "readline";
+import readline from "readline-promise";
 
 import { Board } from "./board";
 import { Card } from "./card";
@@ -33,28 +33,21 @@ async function main() {
 
   showBoardWithPrompt();
 
-  cli.on("close", () => {
-    process.exit();
-  });
-
-  cli.on("line", input => {
-    if (quitCommands.includes(input)) {
-      cli.question("Are you sure you want to quit (y/N)? ", answer => {
-        if (answer.match(/y(es)?/i)) {
-          cli.close();
-          return;
-        }
-        cli.prompt();
+  cli.forEach(async line => {
+    if (quitCommands.includes(line)) {
+      const answer = await cli.questionAsync("Are you sure you want to quit (y/N)? ");
+      if (answer.match(/y(es)?/i)) {
+        cli.close();
         return;
-      });
+      }
       cli.prompt();
       return;
     }
-    if (helpCommands.includes(input)) {
+    if (helpCommands.includes(line)) {
       showHelpWithPrompt();
       return;
     }
-    const move = Move.from(input);
+    const move = Move.from(line);
     if (move === null) {
       console.log("Invalid move.");
       showHelpWithPrompt();
@@ -79,6 +72,10 @@ async function main() {
       return;
     }
     return;
+  });
+
+  cli.on("close", () => {
+    process.exit();
   });
 }
 

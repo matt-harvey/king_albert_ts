@@ -9,6 +9,7 @@
   "bugs": "https://github.com/matt-harvey/albertus/issues",
   "dependencies": {
     "immutable": "^4.0.0-rc.12",
+    "readline-promise": "^1.0.4",
     "runtypes": "^4.0.0",
     "tslib": "^1.10.0"
   },

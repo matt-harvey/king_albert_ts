@@ -14,12 +14,15 @@
     "outDir": "lib",
     "rootDir": "src",
     "strict": true,
-    "target": "es2017"
+    "target": "es2017",
+    "typeRoots": ["typings", "node_modules/@types"]
   },
   "include": [
     "src/**/*"
   ],
   "exclude": [
-    "src/**/*.test.ts"
+    "src/**/*.test.ts",
+    "node_modules",
+    "typings"
   ]
 }
