@@ -1,25 +1,32 @@
-import readline from "readline-promise";
+import readline, { Interface as ReadlineInterface } from "readline-promise";
 
 import { Board } from "./board";
 import { Card } from "./card";
 import { Deck } from "./deck";
 import { Move } from "./move";
 
+const helpCommand = "help";
+const quitCommand = "quit";
+const completableCommands = [helpCommand, quitCommand];
+
+function autocomplete(input: string): [string[], string] {
+  const completions = completableCommands.filter(command => command.startsWith(input));
+  return [completions, input];
+}
+
+function createReadlineInterface(): ReadlineInterface {
+  const { stdin: input, stdout: output } = process;
+  const cli = readline.createInterface({ completer: autocomplete, input, output });
+  cli.on("close", process.exit);
+  return cli;
+}
+
 async function main() {
   const clearScreen = "\x1b[2J\x1b[1;1H";
   const deck = Deck.create().shuffle();
   let board = Board.from(deck);
 
-  const helpCommands = ["help", "?"];
-  const quitCommands = ["quit", "exit"];
-  const completableCommands = [...helpCommands, ...quitCommands];
-  const completer = (line: string) => {
-    const completions = completableCommands.filter(command => command.startsWith(line));
-    return [completions, line];
-  };
-
-  const { stdin: input, stdout: output } = process;
-  const cli = readline.createInterface({ completer, input, output });
+  const cli = createReadlineInterface();
 
   const showBoardWithPrompt = () => {
     console.log(`${clearScreen}${board}`);
@@ -34,19 +41,21 @@ async function main() {
   showBoardWithPrompt();
 
   cli.forEach(async line => {
-    if (quitCommands.includes(line)) {
+
+    switch (line) {
+    case quitCommand:
       const answer = await cli.questionAsync("Are you sure you want to quit (y/N)? ");
       if (answer.match(/y(es)?/i)) {
         cli.close();
-        return;
+      } else {
+        cli.prompt();
       }
-      cli.prompt();
       return;
-    }
-    if (helpCommands.includes(line)) {
+    case helpCommand:
       showHelpWithPrompt();
       return;
     }
+
     const move = Move.from(line);
     if (move === null) {
       console.log("Invalid move.");
@@ -72,10 +81,6 @@ async function main() {
       return;
     }
     return;
-  });
-
-  cli.on("close", () => {
-    process.exit();
   });
 }
 
