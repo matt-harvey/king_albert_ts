@@ -2,7 +2,9 @@ declare module "readline-promise" {
   import * as readline from "readline";
 
   export class Interface extends readline.Interface {
+    // Note these are not complete signatures; we're only typing only what we need.
     public forEach(callback: (line: string, index: number) => void): void;
+    public reduce<T>(callback: (accum: T, input: string) => T, seed: T): T;
     public questionAsync(query: string): Promise<string>;
 
     /* VARIOUS OTHER METHODS TO BE TYPED AS REQUIRED:
