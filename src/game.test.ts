@@ -75,8 +75,8 @@ describe("Game#apply", () => {
         "             A♠   2♠   3♠   4♠   5♠   6♠   7♠ ",
         "",
         "> help",
-        'Enter two letters to describe your desired move, indicating the "from" position, followed by the "to" ' +
-          'position. To quit, enter "quit".',
+        'Enter two letters to describe your move, indicating the "from" position and the "to" position.',
+        'For full rules, enter "rules". To quit, enter "quit".',
       ].join(EOL));
     });
 
@@ -160,7 +160,7 @@ describe("Game#apply", () => {
   describe("when the passed command is not one of the recognized commands and cannot be parsed as a move", () => {
     const newGame = game.apply("qdf");
 
-    it("returns a Game containing the same board, the command with prompt, an error a help message", () => {
+    it("returns a Game containing the same board, the command with prompt, an error and a help message", () => {
       expect(`${newGame}`).toEqual([
         "\x1b[2J\x1b[1;1H",
         "                             a    b    c    d ",
@@ -185,8 +185,8 @@ describe("Game#apply", () => {
         "",
         "> qdf",
         "Invalid move.",
-        'Enter two letters to describe your desired move, indicating the "from" position, followed by the "to" ' +
-          'position. To quit, enter "quit".',
+        'Enter two letters to describe your move, indicating the "from" position and the "to" position.',
+        'For full rules, enter "rules". To quit, enter "quit".',
       ].join(EOL));
     });
 

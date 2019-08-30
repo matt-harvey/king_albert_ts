@@ -6,9 +6,22 @@ import { Move } from "./move";
 
 const quitCommand = "quit";
 const helpCommand = "help";
+const rulesCommand = "rules";
 
-const helpText = `Enter two letters to describe your desired move, indicating the "from" position, ` +
-  `followed by the "to" position. To quit, enter "${quitCommand}".`;
+const helpText =
+`Enter two letters to describe your move, indicating the "from" position and the "to" position.
+For full rules, enter "${rulesCommand}". To quit, enter "${quitCommand}".`;
+
+const rulesText =
+`The game board consists of four Foundations (labelled a to d), nine Columns (e to m), and a Reserve (n to t).
+The aim of the game is to complete the Foundations in ascending order, from Ace through to King in each suit.
+In each Column, only the last card (nearer the bottom of the screen) is available for play.
+All cards in the Reserve are available to play; however cards cannot be moved back into the Reserve once played.
+Any empty Foundation can be filled with the Ace of its suit; and thereafter each Foundation must then be built up
+in ascending sequence from 2 through to King.
+Cards can be played to Columns only one at a time, in descending order in alternating colours. For example,
+if the last card in a Column is a 4${"\u{2661}"}, then either the 3${"\u{2663}"} or the 3${"\u{2660}"} could be added.
+You have won when the top card of each Foundation is a King.`;
 
 const clearScreen = "\x1b[2J\x1b[1;1H";
 
@@ -43,6 +56,8 @@ export class Game {
       return this.finalize().addMessages(promptedMessage, "Bye!");
     case helpCommand:
       return this.addMessages(promptedMessage, helpText);
+    case rulesCommand:
+      return this.addMessages(promptedMessage, rulesText);
     }
 
     const move = Move.from(command);
