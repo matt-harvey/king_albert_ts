@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 
+// TODO This will need revisiting if ever shipped as an npm package.
+
 const fs = require('fs')
 const path = require('path')
 const project = path.join(__dirname, '../tsconfig.json')
-const dev = fs.existsSync(project) && process.env.NODE_ENV !== 'production';
+// Running from installed binary?
+const runningFromNpmBin = process.argv[1].includes("npm/bin");
+const dev = fs.existsSync(project) && !runningFromNpmBin;
 
 if (dev) {
   require('ts-node').register({ project })
