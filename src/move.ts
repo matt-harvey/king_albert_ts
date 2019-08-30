@@ -6,8 +6,8 @@ export const Move = {
 
 // Represents a move of one card from one board position to another.
 export type Move = {
-  source: Label,
-  destination: Label,
+  readonly source: Label,
+  readonly destination: Label,
 };
 
 // If passed a 2-character string, returns a Move where the source is based on the first character
