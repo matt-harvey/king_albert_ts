@@ -15,11 +15,14 @@ function createReadlineInterface(): ReadlineInterface {
   return cli;
 }
 
-async function main() {
+function createGame(): Game {
   const deck = Deck.create().shuffle();
   const board = Board.from(deck);
-  const game = Game.from(board, prompt);
+  return Game.from(board, prompt);
+}
 
+async function main() {
+  const game = createGame();
   const cli = createReadlineInterface();
 
   console.log(game.toString());

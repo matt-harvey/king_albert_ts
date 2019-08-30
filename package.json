@@ -18,6 +18,7 @@
     "@types/node": "^10.14.13",
     "jest": "^24.8.0",
     "nyc": "^14.1.1",
+    "rimraf": "^3.0.0",
     "ts-jest": "^24.0.2",
     "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
@@ -35,10 +36,17 @@
   "main": "dist/index.js",
   "repository": "matt-harvey/albertus",
   "scripts": {
-    "build": "rm -rf dist && tsc --build",
+    "bin": "$npm_package_bin_albertus",
+    "bin:compiled": "$npm_package_bin_albertus --run-compiled",
+    "build": "tsc --build",
+    "build:clean": "npm run clean && npm run build",
+    "build:pack": "rm -rf pack && mkdir -p pack && npm run build && npm pack && mv albertus*.tgz pack/",
+    "build:watch": "tsc --build --watch",
+    "clean": "rm -rf dist && rm -rf pack && rm -f tsconfig.tsbuildinfo",
+    "install:dev": "npm run build:pack && npm install ./pack/albertus*.tgz -g",
+    "test": "jest --coverage",
     "posttest": "tslint --project . --format stylish",
-    "start": "$npm_package_bin_albertus",
-    "test": "jest --coverage"
+    "start": "npm run bin"
   },
   "types": "dist/index.d.ts"
 }

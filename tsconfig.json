@@ -4,6 +4,7 @@
     "alwaysStrict": true,
     "declaration": true,
     "importHelpers": true,
+    "incremental": true,
     "module": "commonjs",
     "noEmitOnError": true,
     "noImplicitAny": true,

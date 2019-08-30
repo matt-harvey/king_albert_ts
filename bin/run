@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 
-// TODO This will need revisiting if ever shipped as an npm package.
+const fs = require("fs")
+const path = require("path")
+const project = path.join(__dirname, "../tsconfig.json")
+const { argv } = process;
 
-const fs = require('fs')
-const path = require('path')
-const project = path.join(__dirname, '../tsconfig.json')
-// Running from installed binary?
-const runningFromNpmBin = process.argv[1].includes("npm/bin");
-const dev = fs.existsSync(project) && !runningFromNpmBin;
+const devMode = fs.existsSync(project);
+const forceRunCompiledBinary = argv.indexOf("--run-compiled") >= 0;
 
-if (dev) {
-  require('ts-node').register({ project })
+if (devMode && !forceRunCompiledBinary) {
+  require("ts-node").register({ project });
+  require(path.join(__dirname, "../src/index"));
+} else {
+  require(path.join(__dirname, "../dist/index"));
 }
-
-require(`../${dev ? 'src' : 'dist'}`);
