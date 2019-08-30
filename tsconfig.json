@@ -15,7 +15,7 @@
     "outDir": "dist",
     "rootDir": "src",
     "strict": true,
-    "target": "es2017",
+    "target": "es2016",
     "typeRoots": [
       "@types",
       "node_modules/@types"
