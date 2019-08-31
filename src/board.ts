@@ -81,7 +81,7 @@ export class Board {
     // Format Positions for printing
     const printableFoundations = foundations.map(stringify);
     const printableHand = hand.map(stringify);
-    const printableColumns = columns.map(column => column.cards.map(stringify));
+    const printableColumns = columns.map(c => c.cards.map(stringify));
     const rows = transposeAndFill(printableColumns, " ");
     const printableRows = rows.map(formatCells);
 
@@ -101,10 +101,10 @@ export class Board {
   }
 
   public victoryState(): VictoryState {
-    if (this.foundations.every(foundation => foundation.isComplete())) {
+    if (this.foundations.every(f => f.isComplete())) {
       return "won";
     }
-    if (this.permittedMoves().size === 0) {
+    if (this.permittedMoves().isEmpty()) {
       return "lost";
     }
     return "ongoing";
@@ -116,7 +116,7 @@ export class Board {
 }
 
 function printableLabels(positions: Collection<number, Position>): Collection<number, string> {
-  return positions.map(position => Label.show(position.label));
+  return positions.map(p => Label.show(p.label));
 }
 
 function createFoundations(startLabel: Label): List<Foundation> {
@@ -144,5 +144,5 @@ function createColumn(label: Label, deck: Deck, numCards: number): [Column, Deck
 
 function formatCells(cells: Collection<number, string>): string {
   const padder = " ";
-  return cells.map(cell => cell.padStart(columnWidth, padder)).join("").padStart(displayWidth - 1, padder) + padder;
+  return cells.map(c => c.padStart(columnWidth, padder)).join("").padStart(displayWidth - 1, padder) + padder;
 }
