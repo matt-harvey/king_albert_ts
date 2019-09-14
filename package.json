@@ -1,12 +1,12 @@
 {
-  "name": "albertus",
+  "name": "king_albert_ts",
   "description": "King Albert patience for the command line",
   "version": "0.1.0",
   "author": "Matthew Harvey @matt-harvey",
   "bin": {
-    "albertus": "./bin/run"
+    "king_albert_ts": "./bin/run"
   },
-  "bugs": "https://github.com/matt-harvey/albertus/issues",
+  "bugs": "https://github.com/matt-harvey/king_albert_ts/issues",
   "dependencies": {
     "immutable": "^4.0.0-rc.12",
     "readline-promise": "^1.0.4",
@@ -31,19 +31,19 @@
     "/bin",
     "/dist"
   ],
-  "homepage": "https://github.com/matt-harvey/albertus",
+  "homepage": "https://github.com/matt-harvey/king_albert_ts",
   "license": "MIT",
   "main": "dist/index.js",
-  "repository": "matt-harvey/albertus",
+  "repository": "matt-harvey/king_albert_ts",
   "scripts": {
-    "bin": "$npm_package_bin_albertus",
-    "bin:compiled": "$npm_package_bin_albertus --run-compiled",
+    "bin": "$npm_package_bin_king_albert_ts",
+    "bin:compiled": "$npm_package_bin_king_albert_ts --run-compiled",
     "build": "tsc --build",
     "build:clean": "npm run clean && npm run build",
-    "build:pack": "rm -rf pack && mkdir -p pack && npm run build && npm pack && mv albertus*.tgz pack/",
+    "build:pack": "rm -rf pack && mkdir -p pack && npm run build && npm pack && mv king_albert_ts*.tgz pack/",
     "build:watch": "tsc --build --watch",
     "clean": "rm -rf dist && rm -rf pack && rm -f tsconfig.tsbuildinfo",
-    "install:dev": "npm run build:pack && npm install ./pack/albertus*.tgz -g",
+    "install:dev": "npm run build:pack && npm install ./pack/king_albert_ts*.tgz -g",
     "test": "jest --coverage",
     "posttest": "tslint --project . --format stylish",
     "start": "npm run bin"

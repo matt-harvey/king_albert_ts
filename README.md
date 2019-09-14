@@ -1,8 +1,8 @@
-# Albertus
+# king\_albert\_ts
 
 ## Overview
 
-`albertus` is a command line implementation of the single-player card game King Albert.
+`king_albert_ts` is a command line implementation of the single-player card game King Albert.
 
 Its main purpose has been as a vehicle for me to play with "mutation free TypeScript". It is written in
 a somewhat functional style, in that while state mutation is avoided as far as possible, classes are
@@ -16,7 +16,7 @@ Clone the repo, and run `npm run install:dev` from within the project root.
 
 ## How to play
 
-Enter `albertus` at the command line to start. You will be presented with a random starting tableau
+Enter `king_albert_ts` at the command line to start. You will be presented with a random starting tableau
 and a command prompt. You move by entering two letters, indicating the position you want to a move a
 card from, and where you want to move it to. For example, `fc` would move a card from the `f`
 position to the `c` position.
@@ -43,7 +43,7 @@ again!
 
 ## Development
 
-To hack on `albertus`, you first need NodeJS installed. Clone and `cd` into the repo, and run
+To hack on `king_albert_ts`, you first need NodeJS installed. Clone and `cd` into the repo, and run
 `npm i` to install the other dependencies.
 
 Various build commands are available:
