@@ -2,11 +2,17 @@
 
 ## Overview
 
-`albertus` is a command line implementation of the single-player card game known as King Albert.
+`albertus` is a command line implementation of the single-player card game King Albert.
+
+Its main purpose has been as a vehicle for me to play with "mutation free TypeScript". It is written in
+a somewhat functional style, in that while state mutation is avoided as far as possible, classes are
+still used to facilitate code reuse, data hiding and method chaining. The code makes heavy use of
+[ImmutableJS](https://immutable-js.github.io/immutable-js/) for internal data structures. Input and
+output operations are confined to `index.ts`, with the rest of the codebase kept side-effect free.
 
 ## Installation
 
-TODO
+Clone the repo, and run `npm run install:dev` from within the project root.
 
 ## How to play
 
@@ -53,8 +59,3 @@ Various build commands are available:
 * `npm test` will run the test suite
 
 Enter `npm run` to see the full list of build commands.
-
-Note `albertus` is written in TypeScript in a functional style, in the sense that mutation of state
-is avoided as far as possible. The code makes heavy use of
-[ImmutableJS](https://immutable-js.github.io/immutable-js/) for internal data structures. Input and
-output operations are confined to `index.ts`, with the rest of the codebase kept side-effect free.
