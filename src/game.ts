@@ -25,6 +25,13 @@ You have won when the top card of each Foundation is a King.`;
 
 const clearScreen = "\x1b[2J\x1b[1;1H";
 
+type GameData = Readonly<{
+  board: Board,
+  over: boolean,
+  messages: List<string>,
+  prompt: string,
+}>;
+
 // Immutably represents the state of a game at a given point in time. The Game contains a Board state, as well
 // as messages intended for display to the user. A Game has a string representation intended for
 // displaying in a terminal, representing that game state.
@@ -35,20 +42,22 @@ export class Game {
   // know which prompt character to use to render a the complete string representation of the
   // current game state.)
   public static from(board: Board, prompt: string): Game {
-    return new Game(board, false, List<string>(), prompt);
+    return new Game({
+      board,
+      messages: List<string>(),
+      over: false,
+      prompt,
+    });
   }
 
   private constructor(
-    private readonly board: Board,
-    public readonly over: boolean,
-    private readonly messages: List<string>,
-    private readonly prompt: string,
+    private readonly data: GameData,
   ) {
   }
 
   // Where command is user input, returns a new Game state that reflects that input.
   public apply(command: string): Game {
-    const { board, prompt } = this;
+    const { board, prompt } = this.data;
     const promptedMessage = prompt + command;
 
     switch (command) {
@@ -79,27 +88,32 @@ export class Game {
     return this.updateBoard(newBoard).resetMessages();
   }
 
+  public get over(): boolean {
+    return this.data.over;
+  }
+
   public toString(): string {
-    return [clearScreen, this.board.toString(), this.formattedMessages()].join(EOL);
+    return [clearScreen, this.data.board.toString(), this.formattedMessages()].join(EOL);
   }
 
   private addMessages(...messages: string[]): Game {
-    return new Game(this.board, this.over, this.messages.push(...messages), this.prompt);
+    return new Game({ ...this.data, messages: this.data.messages.push(...messages) });
   }
 
   private resetMessages(...messages: string[]): Game {
-    return new Game(this.board, this.over, List(messages), this.prompt);
+    return new Game({ ...this.data, messages: List(messages) });
   }
 
   private updateBoard(board: Board): Game {
-    return new Game(board, this.over, this.messages, this.prompt);
+    return new Game({ ...this.data, board });
   }
 
   private finalize(): Game {
-    return new Game(this.board, true, this.messages, this.prompt);
+    return new Game({ ...this.data, over: true });
   }
 
   private formattedMessages(): string {
-    return this.messages.isEmpty() ? "" : EOL + this.messages.join(EOL);
+    const { messages } = this.data;
+    return messages.isEmpty() ? "" : EOL + messages.join(EOL);
   }
 }
