@@ -12,7 +12,9 @@ output operations are confined to `index.ts`, with the rest of the codebase kept
 
 ## Installation
 
-Clone the repo, and run `npm run install:dev` from within the project root.
+1. Clone the repo.
+2. Install the dependencies: `npm i`
+3. Build and install the executable `npm run install:dev`
 
 ## How to play
 
