@@ -18,16 +18,16 @@ const numFoundations = Suit.all().size;
 const numColumns = 9;
 const handSize = 7;
 const displayWidth = numColumns * columnWidth + 1;
-const startFoundationsLabel = Label.min;
-const startColumnsLabel = startFoundationsLabel + numFoundations;
-const startHandLabel = startColumnsLabel + numColumns;
+const foundationsRange = makeRange(Label.min, numFoundations);
+const columnsRange = makeRange(foundationsRange.last(0) + 1, numColumns);
+const handRange = makeRange(columnsRange.last(0) + 1, handSize);
 
 export class Board {
 
   public static from(deck: Deck): Board {
-    const foundations = createFoundations(startFoundationsLabel);
-    const [columns, reducedDeck] = createColumns(startColumnsLabel, deck);
-    const [hand, _] = createHand(startHandLabel, reducedDeck);
+    const foundations = createFoundations(foundationsRange.first());
+    const [columns, reducedDeck] = createColumns(columnsRange.first(), deck);
+    const [hand, _] = createHand(handRange.first(), reducedDeck);
     return new Board(foundations, columns, hand);
   }
 
@@ -57,9 +57,9 @@ export class Board {
     }
     const revisedDestinationPosition = destinationPosition.receive(card);
     const positions = this.allPositions.set(source, revisedSourcePosition).set(destination, revisedDestinationPosition);
-    const foundations = positions.slice(startFoundationsLabel, startColumnsLabel) as List<Foundation>;
-    const columns = positions.slice(startColumnsLabel, startHandLabel) as List<Column>;
-    const hand = positions.slice(startHandLabel) as List<SpotInHand>;
+    const foundations = slicePositions<Foundation>(positions, foundationsRange);
+    const columns = slicePositions<Column>(positions, columnsRange);
+    const hand = slicePositions<SpotInHand>(positions, handRange);
     return new Board(foundations, columns, hand);
   }
 
@@ -145,4 +145,12 @@ function createColumn(label: Label, deck: Deck, numCards: number): [Column, Deck
 function formatCells(cells: Collection<number, string>): string {
   const padder = " ";
   return cells.map(c => c.padStart(columnWidth, padder)).join("").padStart(displayWidth - 1, padder) + padder;
+}
+
+function makeRange(min: number, size: number): Seq.Indexed<number> {
+  return Range(min, min + size);
+}
+
+function slicePositions<T extends Position>(positions: List<Position>, range: Seq.Indexed<Label>): List<T> {
+  return positions.slice(range.first(0), range.last(0) + 1) as List<T>;
 }
